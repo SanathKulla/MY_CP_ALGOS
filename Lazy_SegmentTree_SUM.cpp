@@ -7,8 +7,8 @@ class SGTree
 public:
     SGTree(int n)
     {
-        seg.resize(4 * n + 1);
-        lazy.resize(4 * n + 1);
+        seg.resize(4 * n + 10);
+        lazy.resize(4 * n + 10);
     }
 
     void build(int ind, int low, int high)
