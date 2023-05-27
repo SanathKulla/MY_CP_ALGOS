@@ -11,6 +11,7 @@ public:
 
     void update(int ind, int val)
     {
+        if(ind==0)return;
         while (ind <= n)
         {
             fen[ind] += val;
@@ -37,9 +38,9 @@ public:
     int lb_binarylifting(int val)
     {
         int ind = 0, sum = 0;
-        for (int i = log2(n); i >= 0; i--)
+        for (int i = 20; i >= 0; i--)
         {
-            if (fen[ind + (1 << i)] + sum < val)
+            if ( ind+(1<<i)<=n && fen[ind + (1 << i)] + sum < val)
             {
                 ind += (1 << i);
                 sum += fen[ind];
