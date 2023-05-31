@@ -1,6 +1,7 @@
-vector<vector<int>> parent(100010, vector<int>(21, -1));
-vector<vector<int>> adj(100010);
-vector<int> level(100010);
+vector<vector<int>> parent(200010, vector<int>(21, -1));
+vector<vector<int>> adj(200010);
+vector<int> level(200010);
+vector<int> depth(200010);
 
 void dfs(int node, int par, int d)
 {
@@ -10,19 +11,11 @@ void dfs(int node, int par, int d)
     for (int i = 0; i < adj[node].size(); i++)
     {
         int child = adj[node][i];
-        if (child != par)
-            dfs(child, node, d + 1);
+        if (child == par)
+            continue;
+        dfs(child, node, d + 1);
+        depth[node] = max(depth[node], 1 + depth[child]);
     }
-}
-
-int get_height(int n)
-{
-    int height = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        height = max(level[i], height);
-    }
-    return height;
 }
 
 void binaryLift(int n)
