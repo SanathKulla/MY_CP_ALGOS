@@ -2,7 +2,7 @@
 vector<vector<int>> parent(200010, vector<int>(21, -1));
 vector<vector<int>> adj(200010);
 vector<int> level(200010);
-vector<int> depth(200010);
+vector<int> height(200010);
 vector<int> type1(4 * 200010);
 vector<int> type2(4 * 200010);
 vector<int> intime(200010);
@@ -19,7 +19,7 @@ void dfs(int node, int par, int d)
         if (child == par)
             continue;
         dfs(child, node, d + 1);
-        depth[node] = max(depth[node], 1 + depth[child]);
+        height[node] = max(height[node], 1 + height[child]);
     }
 }
 
