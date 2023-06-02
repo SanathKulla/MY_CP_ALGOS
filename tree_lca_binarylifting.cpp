@@ -1,7 +1,12 @@
+
 vector<vector<int>> parent(200010, vector<int>(21, -1));
 vector<vector<int>> adj(200010);
 vector<int> level(200010);
 vector<int> depth(200010);
+vector<int> type1(4 * 200010);
+vector<int> type2(4 * 200010);
+vector<int> intime(200010);
+vector<int> outtime(200010);
 
 void dfs(int node, int par, int d)
 {
@@ -16,6 +21,27 @@ void dfs(int node, int par, int d)
         dfs(child, node, d + 1);
         depth[node] = max(depth[node], 1 + depth[child]);
     }
+}
+
+void euler_tour(int node, int par, int &timer1, int &timer2)
+{
+    type2[timer2] = node;
+    intime[node] = timer2;
+    timer2++;
+    type1[timer1] = node;
+    timer1++;
+    for (int i = 0; i < adj[node].size(); i++)
+    {
+        int child = adj[node][i];
+        if (child == par)
+            continue;
+        euler_tour(child, node, timer1, timer2);
+        type1[timer1] = node;
+        timer1++;
+    }
+    type2[timer2] = node;
+    outtime[node] = timer2;
+    timer2++;
 }
 
 void binaryLift(int n)
