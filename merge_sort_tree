@@ -1,0 +1,53 @@
+using ll = long long;
+ll n; 
+#define all(s) s.begin(),s.end()
+
+
+vector<ll> seg[400005];
+vector<ll> psum[400005];
+vector<ll> v(100005);
+
+void build(int ind = 0 , int l = 0 , int r = n-1){
+      if(l > r)return;
+      seg[ind].clear();
+      psum[ind].clear();
+      if(l == r){
+        seg[ind].push_back(v[l]);
+        psum[ind].push_back(v[l]);
+        return;
+      }
+      ll mid = (l + r)/2;
+      build(2*ind+1 , l , mid);
+      build(2*ind+2 , mid+1 , r);
+
+      int i = 0 , j =0;
+      while(i < seg[2*ind+1].size() and j < seg[2*ind+2].size()){
+        if(seg[2*ind+1][i] < seg[2*ind+2][j])seg[ind].push_back(seg[2*ind+1][i++]);
+        else seg[ind].push_back(seg[2*ind+2][j++]);
+      }
+      while(i < seg[2*ind+1].size())seg[ind].push_back(seg[2*ind+1][i++]);
+      while(j < seg[2*ind+2].size())seg[ind].push_back(seg[2*ind+2][j++]);
+      ll sum = 0;
+      for(int k = 0 ; k < seg[ind].size();k++)sum += seg[ind][k] , psum[ind].push_back(sum);
+}
+
+pair<ll,ll> query(int ql , int qr ,int k,int l = 0 , int r = n-1 , int ind = 0){
+    if(l > r)return {0,0};
+    if(l > qr or r < ql)return {0,0};
+    if(l >= ql and r <= qr){
+          auto mxind = lower_bound(all(seg[ind]) , k) - seg[ind].begin();
+          ll ret = psum[ind][seg[ind].size()-1];
+          mxind--;
+          if(mxind >= 0){
+             ret -=  psum[ind][mxind];
+          }
+          mxind++;
+          return {ret , seg[ind].size() - mxind};
+    }
+    ll mid = (l+r)/2;
+    pair<ll,ll> x = query(ql , qr , k , l , mid  , 2*ind+1) ;
+    pair<ll,ll> y = query(ql , qr , k , mid+1 , r  , 2*ind+2);
+    x.first += y.first;
+    x.second += y.second;
+    return x;
+}
